@@ -4,18 +4,23 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.brotherd.servicedemo.service.MyIntentService;
 import com.brotherd.servicedemo.service.MyService;
 
-public class MainActivity extends AppCompatActivity {
+public class SecondActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private final String TAG=getClass().getName();
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, SecondActivity.class);
+        context.startActivity(intent);
+    }
+
     private MyService.DownloadBinder binder;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -37,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_second);
     }
 
     public void startService(View view) {
@@ -62,7 +68,5 @@ public class MainActivity extends AppCompatActivity {
         unbindService(connection);
     }
 
-    public void launchSecond(View view) {
-        SecondActivity.launch(this);
-    }
+
 }

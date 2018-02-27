@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.brotherd.servicedemo.MainActivity;
@@ -16,6 +16,7 @@ import com.brotherd.servicedemo.R;
 public class MyService extends Service {
 
     private static final String TAG = "MyService";
+    public static final String MY_SERVICE_CHANNEL = "MyServiceChannel";
     private DownloadBinder binder = new DownloadBinder();
 
     public MyService() {
@@ -23,6 +24,7 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.e(TAG, "onBind: ");
         return binder;
     }
 
@@ -32,7 +34,7 @@ public class MyService extends Service {
         Log.e(TAG, "onCreate: ");
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new NotificationCompat.Builder(this)
+        Notification notification = new NotificationCompat.Builder(this, MY_SERVICE_CHANNEL)
                 .setContentTitle("title")
                 .setContentText("content text")
                 .setWhen(System.currentTimeMillis())
@@ -41,12 +43,11 @@ public class MyService extends Service {
                 .setContentIntent(pi)
                 .build();
         startForeground(1, notification);
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStartCommand: ");
+        Log.e(TAG, "onStartCommand: " + this.toString());
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -54,6 +55,12 @@ public class MyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroy: ");
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.e(TAG, "onUnbind: " + this.toString());
+        return super.onUnbind(intent);
     }
 
     public class DownloadBinder extends Binder {

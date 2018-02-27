@@ -2,6 +2,7 @@ package com.brotherd.servicedemo.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
