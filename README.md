@@ -33,6 +33,129 @@ Android系统会将Service在被杀掉之前最后一次传入onStartCommand方�
 依赖具体的Intent才能运行（需要从Intent中读取相关数据信息等），并且在强制销毁后有必要重新创建运行，那么这样的Service就适合返回
 START_REDELIVER_INTENT。
 
-### IntentService
+### IntentService 
 
-执行完毕任务以后自动停止，内部使用 HandlerThread
+自动在工作线性执行任务，执行完毕任务以后自动停止，内部使用Handler的方式处理用户发送的请求
+
+使用方式 实现onHandleIntent方法，逻辑在这里进行处理
+
+```java
+public class MyIntentService extends IntentService {
+    private static final String TAG = "MyIntentService";
+
+    public MyIntentService() {
+        super("MyIntentService");
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand: "+startId);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        //处理具体逻辑
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "onHandleIntent: thread id="+Thread.currentThread().getId());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: MyIntentService");
+    }
+}
+
+```
+
+IntentService 源码分析
+```java
+
+private volatile Looper mServiceLooper;
+    private volatile ServiceHandler mServiceHandler;
+    private String mName;
+    private boolean mRedelivery;
+
+    //内部使用handler来处理用户的请求
+    private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            //处理逻辑，是在工作线程执行的
+            onHandleIntent((Intent)msg.obj);
+            //执行完毕停止服务
+            stopSelf(msg.arg1);
+        }
+    }
+```
+关于stopSelf(int startId)方法，每次启动的时候都会有一个对应的startId,这个方法中会判断只有当startId,
+是我们传入的最后一个startId的时候，才会真正停止。比如说我们快速startService6次，生成的startI的分别是
+ 1,2,3,4,5,6那么，stopSelf(int startId)方法只有当参数为6的时候才会停止服务。当服务停止以后会回调
+ service的onDestroy方法，在这里mServiceLooper会退出，所以mServiceHandler的handleMessage也不会被调用了。
+```java
+@Override
+    public void onDestroy() {
+        mServiceLooper.quit();
+    }
+```
+
+mServiceHandler的初始化
+```java
+
+ @Override
+    public void onCreate() {
+        super.onCreate();
+        //使用HandlerThread 方便的获取一个Looper
+        HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
+        //调用start方法以后，Looper调用loop()方法开始分发消息
+        thread.start();
+
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
+    }
+```
+抽象方法，用来处理具体逻辑
+```java
+ protected abstract void onHandleIntent(@Nullable Intent intent);
+```
+## 关于HandlerThread
+
+ ```java
+/**
+ * Handy class for starting a new thread that has a looper. The looper can then be 
+ * used to create handler classes. Note that start() must still be called.
+ */
+public class HandlerThread extends Thread {
+    
+    int mPriority;
+    int mTid = -1;
+    Looper mLooper;
+    private @Nullable Handler mHandler;
+    //...
+     @Override
+        public void run() {
+            mTid = Process.myTid();
+            Looper.prepare();
+            synchronized (this) {
+                mLooper = Looper.myLooper();
+                notifyAll();
+            }
+            Process.setThreadPriority(mPriority);
+            onLooperPrepared();
+            Looper.loop();
+            mTid = -1;
+        }
+        //...
+}
+
+```
+
+
