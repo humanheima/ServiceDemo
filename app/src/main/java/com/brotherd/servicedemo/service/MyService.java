@@ -1,11 +1,15 @@
 package com.brotherd.servicedemo.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -15,9 +19,11 @@ import com.brotherd.servicedemo.R;
 
 public class MyService extends Service {
 
+    public static final String PRIMARY_CHANNEL_ID = "default";
+    public static final String PRIMARY_CHANNEL_NAME = "com.brotherd.servicedemo.PrimaryMyChannelName";
     private static final String TAG = "MyService";
-    public static final String MY_SERVICE_CHANNEL = "MyServiceChannel";
     private DownloadBinder binder = new DownloadBinder();
+    private NotificationManager manager;
 
     public MyService() {
     }
@@ -32,17 +38,30 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e(TAG, "onCreate: ");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            getManager().createNotificationChannel(primaryChannel);
+        }
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new NotificationCompat.Builder(this, MY_SERVICE_CHANNEL)
+        Notification notification = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("title")
                 .setContentText("content text")
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(pi)
                 .build();
         startForeground(1, notification);
+    }
+
+    private NotificationManager getManager() {
+        if (manager == null) {
+            manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        return manager;
     }
 
     @Override

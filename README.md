@@ -158,4 +158,40 @@ public class HandlerThread extends Thread {
 
 ```
 
+在启动前台服务的时候，如果Android版本8.0及以上，要创建通知渠道，不然通知显示在通知栏里。
 
+###Service#onCreate()
+```java
+ @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.e(TAG, "onCreate: ");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            getManager().createNotificationChannel(primaryChannel);
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+        Notification notification = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle("title")
+                .setContentText("content text")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(pi)
+                .build();
+        startForeground(1, notification);
+    }
+        
+```
+
+```java
+  private NotificationManager getManager() {
+            if (manager == null) {
+                manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            }
+            return manager;
+        }
+```
