@@ -29,13 +29,13 @@ Intent信息。这个返回值适用场景：服务被确切的启动或者停�
 
 * START_REDELIVER_INTENT=3：如果Service运行的进程被杀死以后，系统会再次创建该Service,并执行onStartCommand回调方法，
 Android系统会将Service在被杀掉之前最后一次传入onStartCommand方法中的Intent保留下来并传入到重新创建后的Service的onStartCommand方法中，
-这样我们就能读取到intent参数。只要返回START_REDELIVER_INTENT，那么onStartCommand重的intent一定不是null。如果我们的Service需要
+这样我们就能读取到intent参数。只要返回START_REDELIVER_INTENT，那么onStartCommand方法参数中的intent一定不是null。如果我们的Service需要
 依赖具体的Intent才能运行（需要从Intent中读取相关数据信息等），并且在强制销毁后有必要重新创建运行，那么这样的Service就适合返回
 START_REDELIVER_INTENT。
 
 ### IntentService 
 
-自动在工作线性执行任务，执行完毕任务以后自动停止，内部使用Handler的方式处理用户发送的请求
+自动在工作线程执行任务，执行完毕任务以后自动停止，内部使用Handler的方式处理用户发送的请求
 
 使用方式 实现onHandleIntent方法，逻辑在这里进行处理
 

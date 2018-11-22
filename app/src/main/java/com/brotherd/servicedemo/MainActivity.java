@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
     public void testIntentService(View view) {
         Intent intent = new Intent(this, MyIntentService.class);
         startService(intent);
+        /**
+         * 即使在子线程启动Service，启动后的 Service 也是运行在主线程的。
+         * new Thread(new Runnable() {
+         *             @Override
+         *             public void run() {
+         *                 Intent intent = new Intent(MainActivity.this, MyService.class);
+         *                 startService(intent);
+         *             }
+         *         }).start();
+         */
     }
 
     public void startService(View view) {

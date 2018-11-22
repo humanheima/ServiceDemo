@@ -37,7 +37,7 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG, "onCreate: ");
+        Log.e(TAG, "onCreate: current thread is："+Thread.currentThread().getName());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
@@ -73,7 +73,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(TAG, "onDestroy: ");
+        Log.e(TAG, "onDestroy: current thread is: "+Thread.currentThread().getName());
     }
 
     @Override
