@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.brotherd.servicedemo.service.MyIntentService;
 import com.brotherd.servicedemo.service.MyService;
+import com.brotherd.servicedemo.service.plugin.TargetService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,5 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchSecond(View view) {
         SecondActivity.launch(this);
+    }
+
+    public void testPluginService(View view) {
+        Intent intent = new Intent(MainActivity.this, TargetService.class);
+        startService(intent);
     }
 }

@@ -47,6 +47,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchSecond"
-        android:text="启动SecondActivity" />
+        android:text="启动SecondActivity"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnPluginActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="testPluginService"
+        android:text="测试Service的插件化"
+        android:textAllCaps="false" />
 
 </LinearLayout>
