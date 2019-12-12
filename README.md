@@ -198,21 +198,3 @@ public class HandlerThread extends Thread {
         }
 ```
 
-* 进程保活
-* Service的运行线程
-
-服务并不会自动开启线程，所有的代码都是默认运行在主线程当中的，即使在子线程启动Service，启动后的 Service 也是运行在主线程的。
-
-* Service启动方式以及如何停止
-
-startService() bindService()
-
-* ServiceConnection里面的回调方法运行在哪个线程？
-
-默认也是在主线程的
-
-* IntentService
-执行完任务之后自动停止
-
-
-

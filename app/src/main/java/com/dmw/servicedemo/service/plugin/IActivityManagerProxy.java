@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo.service.plugin;
+package com.dmw.servicedemo.service.plugin;
 
 import android.content.Intent;
 import android.util.Log;
@@ -27,7 +27,7 @@ public class IActivityManagerProxy implements InvocationHandler {
             }
             intent = (Intent) args[index];
             Intent proxyIntent = new Intent();
-            String packageName = "com.brotherd.servicedemo";
+            String packageName = "com.dmw.servicedemo";
             //注意类的全路径，别写错了
             proxyIntent.setClassName(packageName, packageName + ".service.plugin.ProxyService");
             proxyIntent.putExtra(ProxyService.TARGET_SERVICE, intent.getComponent().getClassName());

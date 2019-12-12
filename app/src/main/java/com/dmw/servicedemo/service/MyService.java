@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dmw.servicedemo.MainActivity;
-import com.brotherd.servicedemo.R;
+import com.dmw.servicedemo.R;
 
 public class MyService extends Service {
 

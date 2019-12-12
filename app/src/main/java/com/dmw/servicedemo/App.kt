@@ -1,9 +1,9 @@
-package com.brotherd.servicedemo
+package com.dmw.servicedemo
 
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import com.brotherd.servicedemo.service.plugin.HookHelper
+import com.dmw.servicedemo.service.plugin.HookHelper
 import java.lang.Exception
 
 /**

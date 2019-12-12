@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo.service.plugin;
+package com.dmw.servicedemo.service.plugin;
 
 
 import android.os.Build;

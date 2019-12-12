@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo.service.plugin;
+package com.dmw.servicedemo.service.plugin;
 
 import android.app.Application;
 import android.app.Service;
@@ -7,23 +7,30 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ProxyService extends Service {
+    private static final String TAG = "ProxyService";
     public static final String TARGET_SERVICE = "target_service";
+
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate: ");
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand: ");
         if (null == intent || !intent.hasExtra(TARGET_SERVICE)) {
             return START_STICKY;
         }
@@ -31,7 +38,7 @@ public class ProxyService extends Service {
         if (null == serviceName) {
             return START_STICKY;
         }
-        Service targetService=null;
+        Service targetService = null;
         try {
             Class activityThreadClazz = Class.forName("android.app.ActivityThread");
             Method getActivityThreadMethod = activityThreadClazz.getDeclaredMethod("getApplicationThread");
@@ -46,7 +53,7 @@ public class ProxyService extends Service {
             Method attachMethod = serviceClazz.getDeclaredMethod("attach",
                     Context.class, activityThreadClazz, String.class, IBinder.class, Application.class, Object.class);
             attachMethod.setAccessible(true);
-            Object defaultSingleton=null;
+            Object defaultSingleton = null;
             if (Build.VERSION.SDK_INT >= 26) {
                 Class<?> activityManageClazz = Class.forName("android.app.ActivityManager");
                 //获取activityManager中的IActivityManagerSingleton字段

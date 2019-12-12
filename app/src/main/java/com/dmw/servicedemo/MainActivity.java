@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.brotherd.servicedemo.service.plugin.TargetService;
 import com.dmw.servicedemo.service.MyIntentService;
 import com.dmw.servicedemo.service.MyService;
+import com.dmw.servicedemo.service.plugin.TargetService;
 
 public class MainActivity extends AppCompatActivity {
 
