@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo.service;
+package com.dmw.servicedemo.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.util.Log;
  * Created by dumingwei on 2017/5/21.
  */
 public class MyIntentService extends IntentService {
+
     private static final String TAG = "MyIntentService";
 
     public MyIntentService() {

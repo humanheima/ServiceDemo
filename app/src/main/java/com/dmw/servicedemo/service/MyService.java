@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo.service;
+package com.dmw.servicedemo.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,7 +14,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.brotherd.servicedemo.MainActivity;
+import com.dmw.servicedemo.MainActivity;
 import com.brotherd.servicedemo.R;
 
 public class MyService extends Service {
@@ -37,7 +37,7 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG, "onCreate: current thread is："+Thread.currentThread().getName());
+        Log.e(TAG, "onCreate: current thread is：" + Thread.currentThread().getName());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
@@ -66,6 +66,7 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e(TAG, "onStartCommand: current thread is：" + Thread.currentThread().getName());
         Log.e(TAG, "onStartCommand: " + startId);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -73,7 +74,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(TAG, "onDestroy: current thread is: "+Thread.currentThread().getName());
+        Log.e(TAG, "onDestroy: current thread is: " + Thread.currentThread().getName());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo;
+package com.dmw.servicedemo;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.brotherd.servicedemo.service.MyIntentService;
-import com.brotherd.servicedemo.service.MyService;
 import com.brotherd.servicedemo.service.plugin.TargetService;
+import com.dmw.servicedemo.service.MyIntentService;
+import com.dmw.servicedemo.service.MyService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.e(TAG, "onServiceConnected: ");
+            Log.e(TAG, "onServiceConnected: current thread is：" + Thread.currentThread().getName());
             binder = (MyService.DownloadBinder) service;
             binder.startDownload();
             binder.onDownloadProgress();
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.e(TAG, "onServiceDisconnected: ");
+            Log.e(TAG, "onServiceDisconnected: current thread is：" + Thread.currentThread().getName());
         }
 
         @Override

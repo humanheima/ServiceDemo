@@ -2,19 +2,21 @@
 
 Service是Android中实现程序后台运行的解决方案，它非常适合去执行那些不需要和用户交互而且还要求长期
 运行的任务。服务的运行不依赖于任何用户界面，即使程序被切换到后台，或者用户打开了另外一个应用程序，
-服务仍然能够保持正常运行。需要注意的是，服务并不是运行在独立的进程中，而是依赖于创建服务的应用程序
-进程。挡某个应用程序被杀掉的时候，所有依赖于该进程的服务也会停止运行。另外，服务并不会自动开启线程，
-所有的代码都是默认运行在主线程当中的。也就是说，我们需要在服务内部手动创建子线程，并在这里执行具体
+服务仍然能够保持正常运行。
+需要注意的是，服务并不是运行在独立的进程中，而是依赖于创建服务的应用程序
+进程。挡某个应用程序被杀掉的时候，所有依赖于该进程的服务也会停止运行。
+
+另外，服务并不会自动开启线程，所有的代码都是默认运行在主线程当中的。也就是说，我们需要在服务内部手动创建子线程，并在这里执行具体
 的任务，否则就可能出现主线程被阻塞的情况。
+
 * 停止一个服务可以使用Context的stopService或Service的stopSelf方法
 * 绑定服务并不会调用Service的onStartCommand()方法
 
 ![通过startService启动Service的生命周期](start.png)
 
-![通过bindService绑定Service的生命周期图](desc.png)
+![通过bindService绑定Service的生命周期图](bind.png)
 
-当Android面临内存匮乏的时候，可能会销毁掉你当前运行的Service，然后待内存充足的时候可以重新创建
-Service，Service被Android系统强制销毁并再次重建的行为依赖于Service中`onStartCommand`方法的返回值。
+当Android面临内存匮乏的时候，可能会销毁掉你当前运行的Service，然后待内存充足的时候可以重新创建Service，Service被Android系统强制销毁并再次重建的行为依赖于Service中`onStartCommand`方法的返回值。
 我们常用的返回值有三种值，START_NOT_STICKY、START_STICKY和START_REDELIVER_INTENT，
 这三个值都是Service中的静态常量。
 
@@ -195,3 +197,22 @@ public class HandlerThread extends Thread {
             return manager;
         }
 ```
+
+* 进程保活
+* Service的运行线程
+
+服务并不会自动开启线程，所有的代码都是默认运行在主线程当中的，即使在子线程启动Service，启动后的 Service 也是运行在主线程的。
+
+* Service启动方式以及如何停止
+
+startService() bindService()
+
+* ServiceConnection里面的回调方法运行在哪个线程？
+
+默认也是在主线程的
+
+* IntentService
+执行完任务之后自动停止
+
+
+

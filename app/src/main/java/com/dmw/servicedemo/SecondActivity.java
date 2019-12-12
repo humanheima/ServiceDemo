@@ -1,4 +1,4 @@
-package com.brotherd.servicedemo;
+package com.dmw.servicedemo;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.brotherd.servicedemo.service.MyService;
+import com.dmw.servicedemo.service.MyService;
 
 public class SecondActivity extends AppCompatActivity {
 
