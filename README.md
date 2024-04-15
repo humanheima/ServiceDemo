@@ -78,3 +78,20 @@ private NotificationManager getManager() {
   
 ```
 
+
+### Service 绑定 connect 的调用栈
+
+```java
+ I  java.lang.Throwable
+        at com.dmw.servicedemo.MainActivity$1.onServiceConnected(MainActivity.java:29)
+        at android.app.LoadedApk$ServiceDispatcher.doConnected(LoadedApk.java:2210)
+        at android.app.LoadedApk$ServiceDispatcher$RunConnection.run(LoadedApk.java:2242)
+        at android.os.Handler.handleCallback(Handler.java:900)
+        at android.os.Handler.dispatchMessage(Handler.java:103)
+        at android.os.Looper.loop(Looper.java:219)
+        at android.app.ActivityThread.main(ActivityThread.java:8673)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:513)
+        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1109)
+```
+

@@ -22,9 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private MyService.DownloadBinder binder;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, Log.getStackTraceString(new Throwable()));
+
             Log.e(TAG, "onServiceConnected: current thread is：" + Thread.currentThread().getName());
             binder = (MyService.DownloadBinder) service;
             binder.startDownload();
