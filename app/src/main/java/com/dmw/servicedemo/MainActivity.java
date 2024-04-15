@@ -1,15 +1,19 @@
 package com.dmw.servicedemo;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import com.dmw.servicedemo.service.MyIntentService;
 import com.dmw.servicedemo.service.MyService;
 import com.dmw.servicedemo.service.plugin.TargetService;
@@ -64,9 +68,25 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
+    int index = 10086;
+
     public void stopService(View view) {
-        Intent intent = new Intent(this, MyService.class);
-        stopService(intent);
+//        Intent intent = new Intent(this, MyService.class);
+//        stopService(intent);
+
+        Intent notificationIntent = new Intent(this, SecondActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, MyService.PRIMARY_CHANNEL_ID)
+                .setContentTitle("title" + index++)
+                .setContentText("content text" + index++)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(pi)
+                .build();
+
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(1, notification);
     }
 
     public void bindService(View view) {

@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.dmw.servicedemo.MainActivity;
 import com.dmw.servicedemo.R;
+import com.dmw.servicedemo.SecondActivity;
 
 public class MyService extends Service {
 
@@ -24,6 +25,8 @@ public class MyService extends Service {
     private static final String TAG = "MyService";
     private DownloadBinder binder = new DownloadBinder();
     private NotificationManager manager;
+
+    private int index = 0;
 
     public MyService() {
     }
@@ -38,23 +41,6 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e(TAG, "onCreate: current thread is：" + Thread.currentThread().getName());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            getManager().createNotificationChannel(primaryChannel);
-        }
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle("title")
-                .setContentText("content text")
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setContentIntent(pi)
-                .build();
-        startForeground(1, notification);
     }
 
     private NotificationManager getManager() {
@@ -68,6 +54,24 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand: current thread is：" + Thread.currentThread().getName());
         Log.e(TAG, "onStartCommand: " + startId);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            getManager().createNotificationChannel(primaryChannel);
+        }
+        Intent notificationIntent = new Intent(this, SecondActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle("title" + index++)
+                .setContentText("content text" + index++)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(pi)
+                .build();
+        startForeground(1, notification);
         return super.onStartCommand(intent, flags, startId);
     }
 

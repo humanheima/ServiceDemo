@@ -125,3 +125,5 @@ public void onDestroy() {
     mServiceLooper.quit();
 }
 ```
+
+* [HandlerThread 源码分析&IntentService使用了HandlerThread](https://www.jianshu.com/p/40d9b1db7283)

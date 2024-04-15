@@ -4,7 +4,7 @@ Service是Android中实现程序后台运行的解决方案，它非常适合去
 运行的任务。服务的运行不依赖于任何用户界面，即使程序被切换到后台，或者用户打开了另外一个应用程序，
 服务仍然能够保持正常运行。
 需要注意的是，服务并不是运行在独立的进程中，而是依赖于创建服务的应用程序
-进程。挡某个应用程序被杀掉的时候，所有依赖于该进程的服务也会停止运行。
+进程。当某个应用程序被杀掉的时候，所有依赖于该进程的服务也会停止运行。
 
 另外，服务并不会自动开启线程，所有的代码都是默认运行在主线程当中的。也就是说，我们需要在服务内部手动创建子线程，并在这里执行具体
 的任务，否则就可能出现主线程被阻塞的情况。
@@ -38,38 +38,43 @@ START_REDELIVER_INTENT。
 在启动前台服务的时候，如果Android版本8.0及以上，要创建通知渠道，不然通知显示在通知栏里。
 
 ###Service#onCreate()
+
 ```java
- @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.e(TAG, "onCreate: ");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel primaryChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            getManager().createNotificationChannel(primaryChannel);
-        }
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle("title")
-                .setContentText("content text")
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setContentIntent(pi)
-                .build();
-        startForeground(1, notification);
+@Override
+public void onCreate() {
+    super.onCreate();
+    Log.e(TAG, "onCreate: ");
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        NotificationChannel primaryChannel = new NotificationChannel(
+            PRIMARY_CHANNEL_ID, PRIMARY_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT);
+        getManager().createNotificationChannel(primaryChannel);
     }
+    Intent intent = new Intent(this, MainActivity.class);
+    PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+    Notification notification = new NotificationCompat.Builder(this,
+            PRIMARY_CHANNEL_ID)
+        .setContentTitle("title")
+        .setContentText("content text")
+        .setWhen(System.currentTimeMillis())
+        .setSmallIcon(R.mipmap.ic_launcher)
+        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap
+            .ic_launcher))
+        .setDefaults(NotificationCompat.DEFAULT_ALL)
+        .setContentIntent(pi)
+        .build();
+    startForeground(1, notification);
+}
         
 ```
 
 ```java
-  private NotificationManager getManager() {
-            if (manager == null) {
-                manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            }
-            return manager;
-        }
+private NotificationManager getManager() {
+    if(manager == null) {
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+    return manager;
+}
+  
 ```
 
